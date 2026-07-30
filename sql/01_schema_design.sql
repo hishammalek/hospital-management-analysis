@@ -1,0 +1,159 @@
+-- =====================================================
+ -- Portfolio 4: Hospital Operations & Patient Flow Analysis
+ -- =====================================================
+ -- Author: Hisham Malek
+ -- Database: PostgreSQL
+ --
+ -- Phase: 2 - Schema Design
+ -- 
+ -- Project Goal:
+ -- Analyze hospital operations using patient, doctor, admission, treatment, and billing data
+ -- to understand patient flow, hospital workload, department performance, and revenue patterns.
+ --
+ -- The goal is to identify operational inefficiencies such as doctor workload imbalance,
+ -- patient readmission patterns, and resource utilization across departments.
+ --
+ -- This analysis will support data-driven decision on staffing, hospital capacity planning,
+ -- and financial performance optimization.
+ -- =====================================================
+
+
+
+ -- =====================================================
+ -- TABLE: Patients
+ -- =====================================================
+ -- Purpose:
+ -- Stores demographic and contact information of hospital patients.
+ --
+ -- Primary Key:
+ -- Patient_ID
+ --
+ -- Columns:
+ -- Patient_ID -> Unique identifier for each patient
+ -- Patient_Name -> Full name of patient (not unique)
+ -- Gender -> Gender of patient
+ -- Date_of_Birth -> Birth date (used for age calculations)
+ -- Blood_Group -> Blood type of patient (medical risk grouping)
+ -- Phone -> Contact number
+ -- City -> Patient location (used for geographic pattern analysis)
+
+
+ -- =====================================================
+ -- TABLE: Doctors
+ -- =====================================================
+ -- Purpose:
+ -- Stores information about doctors in the hospital system,
+ -- including their department, specialization category, and consultation fees.
+ --
+ -- Primary Key:
+ -- Doctor_ID
+ --
+ -- Foreign Key:
+ -- Department_ID -> Departments.Department_ID
+ --
+ -- Columns:
+ -- Doctor_ID -> Unique identifier for each doctor
+ -- Doctor_name -> Name of doctor (non-unique, display field)
+ -- Specialization -> Doctor's assigned profession/category (used for grouping analysis)
+ -- Consultation_Fee -> Fee charged per consultation (used for revenue analysis)
+
+
+ -- =====================================================
+ -- TABLE: Departments
+ -- =====================================================
+ -- Purpose:
+ -- The departments table defines the different medical units in the hospital
+ -- where doctors are assigned and patient care is delivered.
+ --
+ -- Primary Key:
+ -- Department_ID
+ --
+ -- No foreign keys (reference table)
+ --
+ -- Columns:
+ -- Department_Name -> Name of the department (Cardiology, Neurology, etc.)
+ -- Floor_Number -> Physical location of department in hospital (used for resource allocation analysis)
+
+
+ -- =====================================================
+ -- TABLE: Admissions
+ -- =====================================================
+ -- Purpose:
+ -- Records each hospital admission event where a patient
+ -- is admitted under a doctor for a specific time period.
+ -- 
+ --
+ -- Primary Key:
+ -- Admission_ID
+ --
+ -- Foreign Keys:
+ -- Patient_ID -> Patients.Patient_ID
+ -- Doctor_ID -> Doctors.Doctor_ID
+ --
+ -- Columns:
+ -- Admission_Date -> Date patient was admitted (used for trends & LOS analysis)
+ -- Room_Type -> Type of room assigned (General, ICU, Private)
+ -- Discharge_Date -> Date patient was discharged (used for LOS analysis)
+
+
+ -- =====================================================
+ -- TABLE: Treatment
+ -- =====================================================
+ -- Purpose:
+ -- Represents medical procedures performed during a hospital admission,
+ -- including type of treatment and associated cost breakdown.
+ --
+ -- Primary Key:
+ -- Treatment_ID
+ --
+ -- Foreign Key:
+ -- Admission_ID -> Admissions.Admission_ID
+ --
+ -- Columns:
+ -- Treatment_Type -> Type of medical procedure (emergency, medication, surgery, therapy) 
+ -- Treatment_Cost -> Total cost of procedure (used for cost analysis)
+ -- Medicine_Cost -> Medication-related expenses (used for cost analysis)
+ -- Lab_Cost -> Testing and diagnostics costs (used for cost analysis)
+
+
+ -- =====================================================
+ -- TABLE: Billing
+ -- =====================================================
+ -- Purpose:
+ -- The financial report of one hospital admission, including total charges,
+ -- insurance coverage, and patient payment status.
+ --
+ -- Primary Key:
+ -- Admission_ID (also Foreign Key to Admissions)
+ --
+ -- Relationship:
+ -- One Admission = One Billing record
+ --
+ -- Columns:
+ -- Total_Bill
+ -- Insurance_Cover
+ -- Final_Amount_Payable -> what patient actually pays after insurance (used for revenue analysis)
+ -- Payment_Mode -> How patients financially handle hospital costs (Cash, Card, EMI)
+ -- EMI_Months -> How long the patient will take to fully pay the bill (0, 3, 6, 12)
+ -- Monthly_EMI -> Fixed amount the patient pays every month (Monthly_EMI = Final_Amount_Payable / EMI_Months)
+ -- Payment_Status -> Revenue tracking - Paid, Pending (hospital cashflow analysis)
+
+
+ -- =====================================================
+ -- TABLE: Calendar
+ -- =====================================================
+ -- Purpose:
+ -- The calendar table is a date reference table used to standardize time-based analysis
+ -- across all hospital data (admissions, billing, treatments, etc.).
+ --
+ -- Primary Key:
+ -- Date
+ --
+ -- No foreign keys (dimension table)
+ -- Used for time-based analysis across all tables
+ --
+ -- Columns:
+ -- Month -> Used for grouping trends
+ -- Month_No -> Used for grouping trends
+ -- Quarter -> Business reporting (Q1, Q2, Q3, Q4)
+ -- Year -> Long-term performance tracking

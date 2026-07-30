@@ -1,0 +1,10 @@
+-- =====================================================
+-- Executive Summary
+--
+-- Purpose:
+-- Consolidate key hospital performance metrics
+-- from all analytical modules.
+--
+-- Status:
+-- To be completed after Module 1-6 analysis.
+-- =====================================================
