@@ -1,5 +1,6 @@
 # Raw and processed data
 data/raw/
+data/clean/
 data/processed/
 
 # Excel temporary files
