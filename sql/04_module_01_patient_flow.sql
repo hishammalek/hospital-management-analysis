@@ -71,6 +71,68 @@ JOIN admissions a
 
 
 -- =====================================================
+ -- Analysis 1.1D: Patient Admission Conversion Rate
+ --
+ -- Business Question:
+ -- What percentage of registered patients have been admitted to the hospital?
+ --
+ -- Purpose:
+ -- Measure patient utilization by identifying the proportion
+ -- of registered patients who required hospital admission.
+-- =====================================================
+
+SELECT
+    COUNT(DISTINCT a.patient_id) AS admitted_patients,
+    COUNT(DISTINCT p.patient_id) AS total_registered_patients,
+    ROUND(
+        COUNT(DISTINCT a.patient_id) * 100.0 / COUNT(DISTINCT p.patient_id), 2
+    ) AS patient_admission_rate_percentage
+FROM patients p
+LEFT JOIN admissions a
+    ON p.patient_id = a.patient_id;
+
+
+
+-- =====================================================
+ -- Analysis 1.1E: Repeat Admission Rate
+ --
+ -- Business Question:
+ -- What percentage of admitted patients have multiple admissions?
+ --
+ -- Purpose:
+ -- Identify repeat hospital utilization patterns to understand
+ -- returning patient demand and support healthcare resource planning.
+-- =====================================================
+
+WITH patient_admission_count AS (
+    SELECT
+        patient_id,
+        COUNT(admission_id) AS admission_count
+    FROM admissions
+    GROUP BY patient_id
+)
+
+SELECT
+    COUNT(*) FILTER (
+        WHERE admission_count > 1
+    ) AS repeat_admitted_patients,
+
+    COUNT(*) FILTER (
+        WHERE admission_count = 1
+    ) AS single_admission_patients,
+
+    COUNT(*) AS total_admitted_patients,
+
+    ROUND(
+        COUNT(*) FILTER (
+            WHERE admission_count > 1
+        ) * 100.0 / COUNT(*), 2
+    ) AS repeat_admission_rate_percentage
+FROM patient_admission_count;
+
+
+
+-- =====================================================
  -- Analysis 1.2A: Monthly Admission Trend
  --
  -- Business Question:
