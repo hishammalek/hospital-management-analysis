@@ -133,6 +133,65 @@ FROM patient_admission_count;
 
 
 -- =====================================================
+ -- Analysis 1.1F: High Admission Frequency Patients
+ --
+ -- Business Question:
+ -- Which patients have the highest number of admissions?
+ --
+ -- Purpose:
+ -- Identify high admission frequency patterns to understand repeat 
+ -- hospital utilization and support resource planning.
+-- =====================================================
+
+WITH patient_summary AS (
+    SELECT
+        p.patient_id,
+        p.gender,
+        p.date_of_birth,
+        p.blood_group,
+        p.city,
+        MIN(a.admission_date) AS first_admission_date,
+        COUNT(a.admission_id) AS total_admissions
+    FROM patients p
+    JOIN admissions a
+        ON p.patient_id = a.patient_id
+    GROUP BY
+        p.patient_id,
+        p.gender,
+        p.date_of_birth,
+        p.blood_group,
+        p.city
+)
+
+SELECT
+    patient_id,
+    gender,
+
+    CASE
+        WHEN EXTRACT(YEAR FROM AGE(first_admission_date, date_of_birth)) BETWEEN 0 AND 17 
+            THEN '0-17'
+
+        WHEN EXTRACT(YEAR FROM AGE(first_admission_date, date_of_birth)) BETWEEN 18 AND 35 
+            THEN '18-35'
+
+        WHEN EXTRACT(YEAR FROM AGE(first_admission_date, date_of_birth)) BETWEEN 36 AND 50 
+            THEN '36-50'
+            
+        WHEN EXTRACT(YEAR FROM AGE(first_admission_date, date_of_birth)) BETWEEN 51 AND 65 
+            THEN '51-65'
+        ELSE '65+'
+    END AS age_group,
+
+    blood_group,
+    city,
+    total_admissions
+FROM patient_summary
+ORDER BY total_admissions DESC
+LIMIT 10;
+
+
+
+-- =====================================================
  -- Analysis 1.2A: Monthly Admission Trend
  --
  -- Business Question:
