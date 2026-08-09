@@ -12,8 +12,8 @@
  -- after admission.
  --
  -- Analysis Goal:
- -- Identify length of stay patterns, admission and discharge flow,
- -- room utilization efficiency, and patient demographic characteristics
+ -- Identify hospital revenue, payment performance, insurance contribution
+ -- treatment-related costs, revenue contribution and financial risk
  -- to support operational planning, resource allocation, and hospital decision making.
 -- =====================================================
 
@@ -107,62 +107,6 @@ SELECT
 FROM billing
 GROUP BY payment_status
 ORDER BY total_billed_amount DESC;
-
-
-
--- =====================================================
- -- Analysis 4.2C: Outstanding Revenue
- --
- -- Business Question:
- -- How much revenue remains outstanding from unpaid hospital bills?
- --
- -- Purpose:
- -- Identify unpaid patient balances to evaluate potential revenue leakage,
- -- improve collection monitoring, and support financial risk management.
--- =====================================================
-
-SELECT
-    ROUND(
-        SUM(total_bill), 2
-    ) AS total_billed_amount,
-    ROUND(
-        SUM(final_amount_payable), 2
-    ) AS total_patient_payable_amount
-FROM billing
-WHERE payment_status = 'Pending';
-
-
-
--- =====================================================
- -- Analysis 4.2D: Highest Outstanding Bills
- --
- -- Business Question:
- -- Which unpaid hospital bills have the highest outstanding balances?
- --
- -- Purpose:
- -- Identify high-value unpaid bills that may require priority collection
- -- follow-up and help the hospital reduce outstanding revenue risk.
--- =====================================================
-
-SELECT
-    admission_id,
-    payment_status,
-    ROUND(
-        SUM(total_bill), 2
-    ) AS total_billed_amount,
-
-    ROUND(
-        SUM(insurance_cover), 2
-    ) AS insurance_covered_amount,
-
-    ROUND(
-        SUM(final_amount_payable), 2
-    ) AS total_patient_payable_amount
-FROM billing
-WHERE payment_status = 'Pending'
-GROUP BY admission_id, payment_status
-ORDER BY total_patient_payable_amount DESC
-LIMIT 10;
 
 
 
@@ -327,11 +271,11 @@ ORDER BY total_insurance_cover DESC;
  -- Analysis 4.4A: Treatment Cost Overview
  --
  -- Business Question:
- -- What is the total and average treatment cost across hospital records?
+ -- How much does treatment cost contribute to total hospital billing?
  --
  -- Purpose:
  -- Understand the overall financial impact of treatment costs and 
- -- establish a baseline for treatment-related expenses across hospital records.
+ -- measure their contribution to total hospital billing.
 -- =====================================================
 
 SELECT
@@ -341,8 +285,16 @@ SELECT
 
     ROUND(
 		AVG(treatment_cost), 2 
-	) AS average_treatment_cost
-FROM treatment;
+	) AS average_treatment_cost,
+
+    ROUND(
+		SUM(treatment_cost) / SUM(total_bill) * 100.0, 2
+	) AS percentage_treatment_cost
+FROM treatment t
+JOIN admissions a
+    ON t.admission_id = a.admission_id
+JOIN billing b
+    ON a.admission_id = b.admission_id;
 
 
 
@@ -350,11 +302,11 @@ FROM treatment;
  -- Analysis 4.4B: Medicine Cost Overview
  --
  -- Business Question:
- -- What is the total and average medicine cost across hospital records?
+ -- How much does medicine cost contribute to total hospital billing?
  --
  -- Purpose:
  -- Understand the overall financial impact of medicine costs and 
- -- establish a baseline for medicine-related expenses across hospital records.
+ -- measure their contribution to total hospital billing.
 -- =====================================================
 
 SELECT
@@ -364,8 +316,16 @@ SELECT
 
     ROUND(
 		AVG(medicine_cost), 2 
-	) AS average_medicine_cost
-FROM treatment;
+	) AS average_medicine_cost,
+
+    ROUND(
+		SUM(medicine_cost) / SUM(total_bill) * 100.0, 2
+	) AS percentage_medicine_cost
+FROM treatment t
+JOIN admissions a
+    ON t.admission_id = a.admission_id
+JOIN billing b
+    ON a.admission_id = b.admission_id;
 
 
 
@@ -373,11 +333,11 @@ FROM treatment;
  -- Analysis 4.4C: Lab Cost Overview
  --
  -- Business Question:
- -- What is the total and average laboratory cost across hospital records?
+ -- How much does laboratory cost contribute to total hospital billing?
  --
  -- Purpose:
  -- Understand the overall financial impact of laboratory costs and 
- -- establish a baseline for laboratory-related expenses across hospital records.
+ -- measure their contribution to total hospital billing.
 -- =====================================================
 
 SELECT
@@ -387,8 +347,16 @@ SELECT
 
     ROUND(
 		AVG(lab_cost), 2 
-	) AS average_lab_cost
-FROM treatment;
+	) AS average_lab_cost,
+
+    ROUND(
+		SUM(lab_cost) / SUM(total_bill) * 100.0, 2
+	) AS percentage_lab_cost
+FROM treatment t
+JOIN admissions a
+    ON t.admission_id = a.admission_id
+JOIN billing b
+    ON a.admission_id = b.admission_id;
 
 
 
@@ -399,8 +367,8 @@ FROM treatment;
  -- Which hospital departments have the highest-treatment-related costs?
  --
  -- Purpose:
- -- Understand the overall financial impact of laboratory costs and 
- -- establish a baseline for laboratory-related expenses across hospital records.
+ -- Understand treatment-related costs across departments and identify
+ -- departments with the highest overall cost.
 -- =====================================================
 
 SELECT
@@ -434,3 +402,109 @@ JOIN departments dp
     ON d.department_id = dp.department_id
 GROUP BY dp.department_id, dp.department_name
 ORDER BY total_treatment_related_cost DESC;
+
+
+
+-- =====================================================
+ -- Analysis 4.5A: Revenue by Room Type
+ --
+ -- Business Question:
+ -- Which room types generate the highest hospital revenue?
+ --
+ -- Purpose:
+ -- Identify which room types generate highest revenue.
+-- =====================================================
+
+SELECT
+    a.room_type,
+
+    ROUND(
+        SUM(b.total_bill), 2
+    ) AS total_bill
+FROM admissions a
+JOIN billing b
+    ON a.admission_id = b.admission_id
+GROUP BY a.room_type
+ORDER BY total_bill DESC;
+
+
+
+-- =====================================================
+ -- Analysis 4.5B: Revenue by Treatment
+ --
+ -- Business Question:
+ -- Which treatment types generate the highest hospital revenue?
+ --
+ -- Purpose:
+ -- Identify which treatment types generate highest revenue.
+-- =====================================================
+
+SELECT
+    t.treatment_type,
+
+    ROUND(
+        SUM(b.total_bill), 2
+    ) AS total_bill
+FROM treatment t
+JOIN admissions a
+    ON t.admission_id = a.admission_id
+JOIN billing b
+    ON a.admission_id = b.admission_id
+GROUP BY t.treatment_type
+ORDER BY total_bill DESC;
+
+
+
+-- =====================================================
+ -- Analysis 4.6A: Pending Payments
+ --
+ -- Business Question:
+ -- How much revenue remains outstanding from unpaid hospital bills?
+ --
+ -- Purpose:
+ -- Identify unpaid patient balances to evaluate potential revenue leakage,
+ -- improve collection monitoring, and support financial risk management.
+-- =====================================================
+
+SELECT
+    ROUND(
+        SUM(total_bill), 2
+    ) AS total_billed_amount,
+    ROUND(
+        SUM(final_amount_payable), 2
+    ) AS total_patient_payable_amount
+FROM billing
+WHERE payment_status = 'Pending';
+
+
+
+-- =====================================================
+ -- Analysis 4.6B: Highest Outstanding Bills
+ --
+ -- Business Question:
+ -- Which unpaid hospital bills have the highest outstanding balances?
+ --
+ -- Purpose:
+ -- Identify high-value unpaid bills that may require priority collection
+ -- follow-up and help the hospital reduce outstanding revenue risk.
+-- =====================================================
+
+SELECT
+    admission_id,
+    payment_status,
+    ROUND(
+        SUM(total_bill), 2
+    ) AS total_billed_amount,
+
+    ROUND(
+        SUM(insurance_cover), 2
+    ) AS insurance_covered_amount,
+
+    ROUND(
+        SUM(final_amount_payable), 2
+    ) AS total_patient_payable_amount
+FROM billing
+WHERE payment_status = 'Pending'
+GROUP BY admission_id, payment_status
+ORDER BY total_patient_payable_amount DESC
+LIMIT 10;
