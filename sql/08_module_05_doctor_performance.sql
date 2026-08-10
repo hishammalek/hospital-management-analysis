@@ -245,3 +245,153 @@ GROUP BY
 	doctor_name,
 	department_name
 ORDER BY general_admissions DESC;
+
+
+
+-- =====================================================
+ -- Analysis 5.2C: Average Length of Stay by Doctor first.
+ --
+ -- Business Question:
+ -- Which doctors are associated with the longer average patient stays?
+ --
+ -- Purpose:
+ -- Analyze the average length of stay associated with each doctor 
+ -- to identify doctors whose patients have longer hospitalization durations.
+-- =====================================================
+
+SELECT
+	d.doctor_id,
+	d.doctor_name,
+	dp.department_name,
+	COUNT(a.admission_id) AS total_admissions,
+
+	ROUND(
+		AVG(a.discharge_date - a.admission_date), 2 
+	) AS average_length_of_stay
+FROM admissions a
+JOIN doctors d
+	ON a.doctor_id = d.doctor_id
+JOIN departments dp
+	ON d.department_id = dp.department_id
+GROUP BY 
+	d.doctor_id,
+	d.doctor_name,
+	dp.department_name
+ORDER BY average_length_of_stay DESC
+LIMIT 10;
+
+
+
+-- =====================================================
+ -- Analysis 5.3A: Revenue by Doctor
+ --
+ -- Business Question:
+ -- Which doctors contribute the highest total billing revenue to the hospital?
+ --
+ -- Purpose:
+ -- Analyze total billing revenue associated with each doctor to identify doctors
+ -- with higher revenue contribution and support financial performance evaluation
+ -- and resource planning.
+-- =====================================================
+
+SELECT
+	d.doctor_id,
+	d.doctor_name,
+	dp.department_name,
+	SUM(b.total_bill) AS total_revenue
+FROM billing b
+JOIN admissions a
+	ON b.admission_id = a.admission_id
+JOIN doctors d
+	ON a.doctor_id = d.doctor_id
+JOIN departments dp
+	ON d.department_id = dp.department_id
+GROUP BY 
+	d.doctor_id,
+	d.doctor_name,
+	dp.department_name
+ORDER BY total_revenue DESC
+LIMIT 10;
+
+
+
+-- =====================================================
+ -- Analysis 5.3B: Average Bill per Admission
+ --
+ -- Business Question:
+ -- Which doctors have the highest average billing amount per admission?
+ --
+ -- Purpose:
+ -- Analyze the average billing amount associated with each doctor 
+ -- to identify doctors with higher-value admissions and support 
+ -- financial performance evaluation and resource planning.
+-- =====================================================
+
+SELECT
+	d.doctor_id,
+	d.doctor_name,
+	dp.department_name,
+	SUM(b.total_bill) AS total_revenue,
+
+	ROUND(
+		AVG(b.total_bill), 2
+	) AS average_bill_per_admission
+FROM billing b
+JOIN admissions a
+	ON b.admission_id = a.admission_id
+JOIN doctors d
+	ON a.doctor_id = d.doctor_id
+JOIN departments dp
+	ON d.department_id = dp.department_id
+GROUP BY 
+	d.doctor_id,
+	d.doctor_name,
+	dp.department_name
+ORDER BY average_bill_per_admission DESC
+LIMIT 10;
+
+
+
+-- =====================================================
+ -- Analysis 5.4: Doctor Performance Summary.
+ --
+ -- Business Question:
+ -- How do doctors compare across workload, patient utilization, 
+ -- financial value, and operational demand?
+ --
+ -- Purpose:
+ -- Analyze multiple operational and financial performance indicators for each doctor,
+ -- including workload, patient utilization, billing value, and hospitalization duration.
+-- =====================================================
+
+SELECT
+	d.doctor_id,
+	d.doctor_name,
+	dp.department_name,
+
+	COUNT(a.admission_id) AS total_admissions,
+	COUNT(DISTINCT a.patient_id) AS total_patients,
+
+	ROUND(
+		COUNT(a.admission_id) * 1.0 / COUNT(DISTINCT a.patient_id), 2
+	) AS admissions_per_patient,
+
+	ROUND(
+		AVG(b.total_bill), 2
+	) AS average_bill_per_admission,
+
+	ROUND(
+		AVG(a.discharge_date - a.admission_date), 2
+	) AS average_length_of_stay
+FROM billing b
+JOIN admissions a
+	ON b.admission_id = a.admission_id
+JOIN doctors d
+	ON a.doctor_id = d.doctor_id
+JOIN departments dp
+	ON d.department_id = dp.department_id
+GROUP BY 
+	d.doctor_id,
+	d.doctor_name,
+	dp.department_name
+ORDER BY total_admissions DESC;
