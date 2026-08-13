@@ -16,3 +16,6 @@ Thumbs.db
 
 # Dbeaver workspace files
 .metadata/
+
+# Documentation
+docs/

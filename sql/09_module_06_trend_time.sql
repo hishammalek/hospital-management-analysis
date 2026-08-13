@@ -175,3 +175,241 @@ FROM
     JOIN repeat_patient_data r ON y.year = r.year
 ORDER BY
     y.year;
+
+
+
+-- =====================================================
+-- Analysis 6.2A: Monthly Demand Patterns
+--
+-- Business Question:
+-- Which months consistenly experience higher or lower admission demand acrosss
+-- 2020-2024?
+--
+-- Purpose:
+-- Analyze monthly admission demand across multiple years to identify consistenly
+-- high and low-demand months and support seasonal capacity and resource planning.
+-- =====================================================
+
+WITH
+    monthly_admission_data AS (
+        SELECT
+            c.month_no,
+            c.month,
+            COUNT(a.admission_id) AS total_admissions
+        FROM
+            admissions a
+            JOIN calendar c ON a.admission_date = c.calendar_date
+        GROUP BY
+            c.month_no,
+            c.month,
+            c.year
+    )
+SELECT
+    month,
+    ROUND(AVG(total_admissions), 2) AS average_monthly_admissions,
+    MIN(total_admissions) AS lowest_admissions,
+    MAX(total_admissions) AS highest_admissions
+FROM
+    monthly_admission_data
+GROUP BY
+    month_no,
+    month
+ORDER BY
+    average_monthly_admissions DESC;
+
+
+
+-- =====================================================
+-- Analysis 6.2B: Monthly Demand Variability
+--
+-- Business Question:
+-- Which calendar months have the most consistent or fluctuating admission 
+-- demand across 2020–2024?
+--
+-- Purpose:
+-- Analyze admission variability across calendar months to identify
+-- months with more consistent or fluctuating demand and support
+-- flexible staffing, bed capacity, and resource planning.
+-- =====================================================
+
+WITH
+    monthly_admission_data AS (
+        SELECT
+            month_no,
+            month,
+            year,
+            COUNT(a.admission_id) AS total_admissions
+        FROM
+            admissions a
+            JOIN calendar c ON a.admission_date = c.calendar_date
+        GROUP BY
+            month_no,
+            month,
+            year
+    )
+SELECT
+    month,
+    ROUND(AVG(total_admissions), 2) AS average_monthly_admissions,
+    ROUND(STDDEV (total_admissions), 2) AS variability_monthly_admissions,
+    MIN(total_admissions) AS lowest_admissions,
+    MAX(total_admissions) AS highest_admissions
+FROM
+    monthly_admission_data
+GROUP BY
+    month_no,
+    month
+ORDER BY
+    variability_monthly_admissions DESC;
+
+
+
+-- =====================================================
+-- Analysis 6.3A: Weekday vs Weekend
+--
+-- Business Question:
+-- How does weekday vs weekend admission demand change across 2020-2024?
+--
+-- Purpose:
+-- Analyze weekday and weekend admission patterns across years to identify
+-- changes in weekly demand distribution and support staffing, scheduling,
+-- and resource planning.
+-- =====================================================
+
+WITH
+    yearly_admission_data AS (
+        SELECT
+            c.year,
+            CASE
+                WHEN EXTRACT(
+                    DOW
+                    FROM
+                        a.admission_date
+                ) IN (0, 6) THEN 'Weekend'
+                ELSE 'Weekday'
+            END AS admission_period,
+            COUNT(a.admission_id) AS total_admissions
+        FROM
+            admissions a
+            JOIN calendar c ON a.admission_date = c.calendar_date
+        GROUP BY
+            admission_period,
+            year
+    ),
+    yearly_weekday_weekend AS (
+        SELECT
+            year,
+            SUM(
+                CASE
+                    WHEN admission_period = 'Weekday' THEN total_admissions
+                    ELSE 0
+                END
+            ) AS weekday_admissions,
+            SUM(
+                CASE
+                    WHEN admission_period = 'Weekend' THEN total_admissions
+                    ELSE 0
+                END
+            ) AS weekend_admissions
+        FROM
+            yearly_admission_data
+        GROUP BY
+            year
+    )
+SELECT
+    year,
+    weekday_admissions + weekend_admissions AS total_admissions,
+    weekday_admissions,
+    ROUND(
+        (weekday_admissions) * 100.0 / (weekday_admissions + weekend_admissions),
+        2
+    ) AS weekday_percentage,
+    weekend_admissions,
+    ROUND(
+        (weekend_admissions) * 100.0 / (weekday_admissions + weekend_admissions),
+        2
+    ) AS weekend_percentage
+FROM
+    yearly_weekday_weekend
+ORDER BY
+    year ASC;
+
+
+
+-- =====================================================
+-- Analysis 6.4A: Revenue Over Time
+--
+-- Business Question:
+-- How does hospital revenue change over time, and are there noticeable
+-- seasonal patterns?
+--
+-- Purpose:
+-- Analyze revenue patterns across time to identify growth, decline, and
+-- potential seasonal patterns, helping the hospital understand changes
+-- in financial performance and demand.
+-- =====================================================
+
+SELECT
+    c.year,
+    c.month_no,
+    c.month,
+    ROUND(SUM(b.total_bill), 2) AS total_revenue
+FROM
+    billing b
+    JOIN admissions a ON b.admission_id = a.admission_id
+    JOIN calendar c ON a.admission_date = c.calendar_date
+GROUP BY
+    c.year,
+    c.month_no,
+    c.month
+ORDER BY
+    c.year,
+    c.month_no;
+
+
+
+-- =====================================================
+-- Analysis 6.4B: Revenue Growth
+--
+-- Business Question:
+-- How has hospital revenue changed from year to year?
+--
+-- Purpose:
+-- Analyze annual revenue growth or decline to identify changes
+-- in the hospital's financial performance over the 2020-2024 period.
+-- =====================================================
+
+WITH
+    year_revenue AS (
+        SELECT
+            c.year,
+            SUM(b.total_bill) AS total_revenue
+        FROM
+            billing b
+            JOIN admissions a ON b.admission_id = a.admission_id
+            JOIN calendar c ON a.admission_date = c.calendar_date
+        GROUP BY
+            c.year
+    ),
+    previous_year_revenue AS (
+        SELECT
+            year,
+            total_revenue,
+            LAG (total_revenue) OVER (
+                ORDER BY
+                    year
+            ) AS previous_revenue
+        FROM
+            year_revenue
+    )
+SELECT
+    year,
+    total_revenue,
+    previous_revenue,
+    ROUND(
+        (total_revenue - previous_revenue) * 100.0 / previous_revenue,
+        2
+    ) AS yoy_growth_percentage
+FROM
+    previous_year_revenue
+ORDER BY
+    year ASC;
