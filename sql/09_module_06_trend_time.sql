@@ -16,8 +16,6 @@
 -- hospital capacity planning and operational decision making.
 -- =====================================================
 
-
-
 -- =====================================================
 -- Analysis 6.1A: Monthly Admissions
 --
@@ -28,7 +26,6 @@
 -- Analyze monthly admissions activity patterns to understand changes 
 -- in clinical demand and support capacity and staffing decisions.
 -- =====================================================
-
 SELECT
     c.year,
     c.month,
@@ -45,8 +42,6 @@ ORDER BY
     c.year,
     c.month_no;
 
-
-
 -- =====================================================
 -- Analysis 6.1B: Yearly Admissions
 --
@@ -57,7 +52,6 @@ ORDER BY
 -- Analyze yearly admissions activity patterns to understand changes 
 -- in clinical demand and support capacity and staffing decisions.
 -- =====================================================
-
 SELECT
     c.year,
     COUNT(a.admission_id) AS total_admissions,
@@ -74,8 +68,6 @@ GROUP BY
 ORDER BY
     c.year ASC;
 
-
-
 -- =====================================================
 -- Analysis 6.1C: Year-over-Year Growth
 --
@@ -86,7 +78,6 @@ ORDER BY
 -- Analyze year-over-year changes in admission volume to identify
 -- growth, decline, and changes in hospital demand over time.
 -- =====================================================
-
 SELECT
     c.year,
     COUNT(a.admission_id) AS total_admissions,
@@ -118,8 +109,6 @@ FROM
 GROUP BY
     c.year;
 
-
-
 -- =====================================================
 -- Analysis 6.1D: Repeat Patient Analysis
 --
@@ -130,7 +119,6 @@ GROUP BY
 -- Analyze repeat admission patterns to understand recurring patient demand
 -- and identify the proportion of patients with multiple admissions within each year.
 -- =====================================================
-
 WITH
     patient_data AS (
         SELECT
@@ -176,20 +164,17 @@ FROM
 ORDER BY
     y.year;
 
-
-
 -- =====================================================
 -- Analysis 6.2A: Monthly Demand Patterns
 --
 -- Business Question:
--- Which months consistenly experience higher or lower admission demand acrosss
+-- Which months consistently experience higher or lower admission demand across
 -- 2020-2024?
 --
 -- Purpose:
--- Analyze monthly admission demand across multiple years to identify consistenly
+-- Analyze monthly admission demand across multiple years to identify consistently
 -- high and low-demand months and support seasonal capacity and resource planning.
 -- =====================================================
-
 WITH
     monthly_admission_data AS (
         SELECT
@@ -217,8 +202,6 @@ GROUP BY
 ORDER BY
     average_monthly_admissions DESC;
 
-
-
 -- =====================================================
 -- Analysis 6.2B: Monthly Demand Variability
 --
@@ -231,7 +214,6 @@ ORDER BY
 -- months with more consistent or fluctuating demand and support
 -- flexible staffing, bed capacity, and resource planning.
 -- =====================================================
-
 WITH
     monthly_admission_data AS (
         SELECT
@@ -261,8 +243,6 @@ GROUP BY
 ORDER BY
     variability_monthly_admissions DESC;
 
-
-
 -- =====================================================
 -- Analysis 6.3A: Weekday vs Weekend
 --
@@ -274,7 +254,6 @@ ORDER BY
 -- changes in weekly demand distribution and support staffing, scheduling,
 -- and resource planning.
 -- =====================================================
-
 WITH
     yearly_admission_data AS (
         SELECT
@@ -333,8 +312,6 @@ FROM
 ORDER BY
     year ASC;
 
-
-
 -- =====================================================
 -- Analysis 6.4A: Revenue Over Time
 --
@@ -347,7 +324,6 @@ ORDER BY
 -- potential seasonal patterns, helping the hospital understand changes
 -- in financial performance and demand.
 -- =====================================================
-
 SELECT
     c.year,
     c.month_no,
@@ -365,8 +341,6 @@ ORDER BY
     c.year,
     c.month_no;
 
-
-
 -- =====================================================
 -- Analysis 6.4B: Revenue Growth
 --
@@ -377,7 +351,6 @@ ORDER BY
 -- Analyze annual revenue growth or decline to identify changes
 -- in the hospital's financial performance over the 2020-2024 period.
 -- =====================================================
-
 WITH
     year_revenue AS (
         SELECT
@@ -413,3 +386,114 @@ FROM
     previous_year_revenue
 ORDER BY
     year ASC;
+
+-- =====================================================
+-- Analysis 6.5A: Long-Term Admission Demand Trend
+--
+-- Business Question:
+-- How has monthly hospital admission demand evolved over the 2020-2024 period,
+-- and is there an underlying long-term trend?
+--
+-- Purpose:
+-- Analyze the relationship between time and monthly admission volume to identify
+-- whether hospital demand shows an overall upward, downward, or relatively stable
+-- long-term trend.
+-- =====================================================
+WITH
+    monthly_admission_data AS (
+        SELECT
+            c.year,
+            c.month_no,
+            c.month,
+            COUNT(a.admission_id) AS total_admissions
+        FROM
+            admissions a
+            JOIN calendar c ON a.admission_date = c.calendar_date
+        GROUP BY
+            c.month_no,
+            c.month,
+            c.year
+    ),
+    month_row_number AS (
+        SELECT
+            year,
+            month_no,
+            month,
+            ROW_NUMBER() OVER (
+                ORDER BY
+                    year,
+                    month_no
+            ) AS month_index,
+            total_admissions
+        FROM
+            monthly_admission_data
+    )
+SELECT
+    CORR(month_index, total_admissions) AS long_term_trend_correlation
+FROM
+    month_row_number;
+
+-- =====================================================
+-- Analysis 6.5B: Future Admission Forecast
+--
+-- Business Question:
+-- Based on the historical admission trend from 2020-2024, what is the projected
+-- monthly admission demand for the next 12 months?
+--
+-- Purpose:
+-- Use a linear regression trend model based on historical monthly admission volume
+-- to estimate future admission demand for 2025.
+-- =====================================================
+WITH
+	monthly_admission_data AS (
+		SELECT
+			c.year,
+			c.month_no,
+			c.month,
+			ROW_NUMBER() OVER(
+				ORDER BY year, month_no
+			) AS month_index,
+			COUNT(a.admission_id) AS total_admissions
+		FROM
+			admissions a
+			JOIN calendar c ON a.admission_date = c.calendar_date
+		GROUP BY 
+			c.year,
+			c.month_no,
+			c.month
+	),
+	trend_model AS (
+		SELECT
+			REGR_SLOPE(total_admissions, month_index) AS trend_slope,
+			REGR_INTERCEPT(total_admissions, month_index) AS trend_intercept
+		FROM monthly_admission_data
+	),
+	future_months AS (
+		SELECT
+			GENERATE_SERIES(
+				DATE '2025-01-01',
+				DATE '2025-12-01',
+				INTERVAL '1 month'
+			) AS future_date
+	),
+	forecast_data AS (
+		SELECT
+			fm.future_date,
+			ROW_NUMBER() OVER (ORDER BY fm.future_date) + 60 AS month_index,
+			tm.trend_slope,
+			tm.trend_intercept,
+			tm.trend_intercept + (tm.trend_slope * (ROW_NUMBER() OVER (ORDER BY fm.future_date) + 60)) AS forecast_admissions
+		FROM future_months fm
+		CROSS JOIN trend_model tm
+	)
+SELECT
+	EXTRACT(YEAR FROM future_date) AS year,
+	EXTRACT(MONTH FROM future_date) AS month_no,
+	TO_CHAR(future_date, 'Month') AS month,
+	month_index,
+	ROUND(
+		forecast_admissions::numeric,
+        2
+		) AS forecast_admissions
+FROM forecast_data
+ORDER BY year ASC;
