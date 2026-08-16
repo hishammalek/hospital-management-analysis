@@ -1,10 +1,103 @@
 -- =====================================================
--- Executive Summary
+-- Portfolio 4: Hospital Operations & Patient Flow Analysis
+-- =====================================================
+-- Author: Hisham Malek
+-- Database: PostgreSQL
+--
+-- Phase: 5 - SQL Analysis - Executive Summary
+--
 --
 -- Purpose:
--- Consolidate key hospital performance metrics
--- from all analytical modules.
---
--- Status:
--- To be completed after Module 1-6 analysis.
+-- Consolidate key hospital performance metrics from all analytical modules.
+-- 
+-- 1. Patient Demand & Utilization
+-- 2. Operational Capacity & Patient Flow
+-- 3. Department & Doctor Workload
+-- 4. Financial Performance & Risk
+-- 5. Trends & Outlook
 -- =====================================================
+
+-- ============================================================
+-- 1. Patient Demand & Utilization
+-- ============================================================
+-- Key findings:
+-- - 99.27% of registered patients experienced at least one admission.
+-- - 96.61% of admitted patients were repeat-admitted.
+-- - Admitted patients experienced an average of 5.04 admissions.
+-- - 2024 recorded the highest annual admission volume at 10,242.
+--
+-- Executive Insights:
+-- Hospital workload is strongly influenced by repeat patient
+-- utilization, while overall admission demand reached its highest
+-- annual level in 2024.
+
+-- ============================================================
+-- 2. Operational Capacity & Patient Flow
+-- ============================================================
+-- Key findings:
+-- - Overall average hospital length of stay was 7.46 days.
+-- - 24,860 admissions fell within the 8-14 day length-of-stay range.
+-- - Month-end patient census ranged from 172 to 238 active patients.
+-- - The highest recorded month-end census was 238 patients in October 2023.
+-- - Monthly admissions and discharges remained broadly balanced.
+--
+-- Executive Insights:
+-- Patient flow remained broadly balanced, but substantial longer-duration
+-- stays and fluctuations in month-end census indicate periods of changing
+-- capacity pressure.
+
+-- ============================================================
+-- 3. Department & Doctor Workload
+-- ============================================================
+-- Key findings:
+-- - Oncology recorded the highest department admission workload
+--   with 6,237 admissions.
+-- - The average doctor handled 250 admissions.
+-- - Robert Flores (Emergency) recorded 300 admissions, 20% above
+--   the doctor average, with 298 unique patients and 37 ICU admissions.
+-- - Christopher Carroll (Pediatrics) recorded the highest average
+--   bill per admission at $42,143.63.
+--
+-- Executive Insights:
+-- Department and doctor workload varies across multiple dimensions, 
+-- including patient volume, admission workload, critical-care utilization,
+-- and financial value. This indicates that doctor performance should be
+-- evaluated using a multidimensional view rather than admission volume
+-- or revenue alone. 
+
+-- ============================================================
+-- 4. Financial Performance & Risk
+-- ============================================================
+-- Key findings:
+-- - 50,000 hospital bills generated approximately $1.89B in total billing.
+-- - Treatment costs represented 80.75% of total billing.
+-- - Insurance contributed 25.03% of total billing.
+-- - $353.57M in patient-payable balances remained pending.
+--
+-- Executive Insights:
+-- The hospital operates at substantial financial scale, with treatment
+-- costs representing the dominant component of total billing. At the same
+-- time, the significant pending patient-payable balance represents an
+-- important area for revenue-collection and cash-flow monitoring.
+
+-- ============================================================
+-- 5. Trends & Outlook
+-- ============================================================
+-- Key findings:
+-- - 2024 recorded the highest annual admission volume at 10,242,
+--   with admission growth of 3.58%.
+-- - Annual revenue reached a five-year high of $389.74M in 2024,
+--   with revenue growth of 3.96%.
+-- - August recorded the highest average monthly admission demand
+--   at 860.20 admissions.
+-- - December showed the highest monthly demand variability.
+-- - Long-term admission correlation was weak at r = 0.155.
+-- - The baseline 2025 forecast projects approximately 843-847
+--   admissions per month.
+--
+-- Executive Insights:
+-- Demand and revenue reached their highest annual levels in 2024,
+-- but the weak long-term trend and baseline forecast indicate
+-- relatively stable future demand rather than rapid sustained growth.
+-- Seasonal and weekly demand patterns remain important considerations
+-- for staffing, capacity, and resource planning.

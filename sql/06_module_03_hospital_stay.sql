@@ -41,7 +41,7 @@ FROM
 --
 -- Purpose:
 -- Compare average patient length of stay across departments to identify departments
--- with longer or short hospitalization patterns and support capacity planning,
+-- with longer or shorter hospitalization patterns and support capacity planning,
 -- resource allocation, and operational efficiency.
 -- =====================================================
 SELECT
@@ -66,7 +66,7 @@ ORDER BY
 --
 -- Purpose:
 -- Analyze patient length of stay distribution to identify common hospitalization
--- patterns and support capacity planning, resources allocation, discharge preparation, 
+-- patterns and support capacity planning, resource allocation, discharge preparation, 
 -- and operational efficiency.
 -- =====================================================
 WITH
@@ -198,7 +198,7 @@ ORDER BY
 -- Purpose:
 -- Measure the difference between incoming and outgoing patient volume to identify 
 -- months with higher hospital workload, months with increased room pressure, and 
--- months requiring addiotional operational planning.
+-- months requiring additional operational planning.
 -- =====================================================
 WITH
     patient_events AS (
