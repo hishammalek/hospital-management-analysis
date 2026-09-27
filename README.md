@@ -88,12 +88,12 @@ Power BI:
 ### 3. Department & Doctor Workload
 - **Workload:** 250 average admissions/doctor; Robert Flores 300 admissions (highest) and 298 unique patients, the difference represents repeated admissions
 - **ICU & Department:** The doctor with the highest total admissions does not have the highest ICU admissions. Admission workload varies by department, Oncology 6,237 (highest)
-- **Billing:** Christopher Carroll's average bill at $42,143.63 (highest), meaning he has a higher average billing value per admission than the hospital average of $37,773.51
+- **Billing:** Christopher Carroll's average bill of $42,143.63 (highest), meaning he has a higher average billing value per admission than the hospital average of $37,773.51
 
 ### 4. Financial Performance & Risk
 - **Financial Scale:** Total billing $1.89bn from 50,000 bills. Annual billing was relatively stable, $368.98M in 2022 → $389.74M in 2024
 - **Cost Structure:** Treatment cost $1.53bn, 80.75% of total billing. Medicine cost $225.48M and Lab cost $138.02M
-- **Payment Risk:** $353.57M of $1.42bn total patient payable remains pending.
+- **Payment Risk:** $353.57M of $1.42bn total patient payable remains pending
 - **Billing Differences:** General rooms $892.14M (highest), Private $612.79M and ICU $383.74M. Oncology $235.92M (highest) and Gastroenterology $83.56M (lowest). Treatment types ranged $375.33M for Emergency to $386.00M for Therapy
 - **Insurance Contribution:** Insurance coverage was $472.80M, 25.03% of total billing
 
@@ -118,6 +118,7 @@ These insights are translated into operational recommendations for hospital mana
 
 ## **Project Structure**
 
+```text
 hospital_management_analysis/
 ├── assets/
 │   ├── images/
@@ -143,13 +144,14 @@ hospital_management_analysis/
 │   ├── 09_module_06_trend_time.sql
 │   └── 10_executive_summary.sql
 └── README.md
+```
 
 ---
 
 ## **Future Improvements**
 
-- Include **automated data refresh** to make the dashboard dynamic with latest data
-- Include **real-time operational monitoring** because having it can be important for timely decisions
+- Include **automated data refresh** to make the dashboard dynamic with the latest data
+- Include **real-time operational monitoring** for timely decision-making
 - Perform **advanced demand forecasting** for future planning
 - Include **additional operational and financial KPIs** to gain more insights for better understanding
 
@@ -176,5 +178,9 @@ Final results are visualized through a Power BI dashboard to support interactive
 
 Click on the Power BI file in the `powerbi/` folder to explore the interactive dashboard.
 
+---
 
-
+## **Conclusions**
+- Successfully analyzed the hospital management dataset from 2020–2024 using Excel, SQL and Power BI
+- The analysis provides a better understanding of hospital patient demand, operations, doctor workload, financial performance, trends and future outlook.
+- As a result, the analysis supports hospital management with capacity planning, staffing, resource allocation and future planning.
