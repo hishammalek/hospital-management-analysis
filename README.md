@@ -148,30 +148,31 @@ hospital_management_analysis/
 
 ## **Future Improvements**
 
-- Include **external variables** to perform ARIMAX, such as GDP, festive seasons, promotions, fuel prices or travel demand factors
-- Try other forecasting like **Prophet or LSTM (Long Short-Term Memory)**
-- Perform **hyperparameter tuning** for SARIMA
-- Expand dataset with more **recent** airline data
-
-**Overall, the SARIMA model provides a reliable baseline forecasting approach for airline passenger demand and demonstrates the importance of incorporating seasonality in time series analysis**
+- Include **automated data refresh** to make the dashboard dynamic with latest data
+- Include **real-time operational monitoring** because having it can be important for timely decisions
+- Perform **advanced demand forecasting** for future planning
+- Include **additional operational and financial KPIs** to gain more insights for better understanding
 
 ---
 
-## **Visuals**
+## **Power BI Dashboard**
 
 Final results are visualized through a Power BI dashboard to support interactive exploration of trends and forecasts
 
-### Executive Overview
-![airline-passenger-forecasting](assets/images/powerbi/01_executive_overview.png)
+### Patient Demand & Utilization
+![hospital-management-analysis](assets/images/powerbi/01_patient_demand_utilization.png)
 
-### Trend & Seasonality
-![airline-passenger-forecasting](assets/images/powerbi/02_trend_seasonality.png)
+### Operational Capacity & Patient Flow
+![hospital-management-analysis](assets/images/powerbi/02_operational_capacity_patient_flow.png)
 
-### Forecast vs Actual
-![airline-passenger-forecasting](assets/images/powerbi/03_forecast_actual.png)
+### Department & Doctor Workload
+![hospital-management-analysis](assets/images/powerbi/03_department_doctor_workload.png)
 
-### Business Insights
-![airline-passenger-forecasting](assets/images/powerbi/04_business_insights.png)
+### Financial Performance & Risk
+![hospital-management-analysis](assets/images/powerbi/04_financial_performance_risk.png)
+
+### Trends & Outlook
+![hospital-management-analysis](assets/images/powerbi/05_trends_outlook.png)
 
 Click on the Power BI file in the `powerbi/` folder to explore the interactive dashboard.
 
