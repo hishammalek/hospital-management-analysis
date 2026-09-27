@@ -162,19 +162,19 @@ hospital_management_analysis/
 Final results are visualized through a Power BI dashboard to support interactive exploration of trends and forecasts
 
 ### Patient Demand & Utilization
-![hospital-management-analysis](assets/images/powerbi/01_patient_demand_utilization.png)
+![hospital-management-analysis](assets/images/01_patient_demand_utilization.png)
 
 ### Operational Capacity & Patient Flow
-![hospital-management-analysis](assets/images/powerbi/02_operational_capacity_patient_flow.png)
+![hospital-management-analysis](assets/images/02_operational_capacity_patient_flow.png)
 
 ### Department & Doctor Workload
-![hospital-management-analysis](assets/images/powerbi/03_department_doctor_workload.png)
+![hospital-management-analysis](assets/images/03_department_doctor_workload.png)
 
 ### Financial Performance & Risk
-![hospital-management-analysis](assets/images/powerbi/04_financial_performance_risk.png)
+![hospital-management-analysis](assets/images/04_financial_performance_risk.png)
 
 ### Trends & Outlook
-![hospital-management-analysis](assets/images/powerbi/05_trends_outlook.png)
+![hospital-management-analysis](assets/images/05_trends_outlook.png)
 
 Click on the Power BI file in the `powerbi/` folder to explore the interactive dashboard.
 
