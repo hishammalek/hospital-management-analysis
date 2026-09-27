@@ -98,22 +98,21 @@ Power BI:
 - **Insurance Contribution:** Insurance coverage was $472.80M, 25.03% of total billing
 
 ### 5. Trends & Outlook
-**Seasonal Demand:** August 860.20 (highest)
-**Demand Variability:** December 64.14 (highest), making demand less predictable and requiring more flexible planning
-**Long-Term Trend:** The long-term admission trend shows a weak positive relationship with time (r = 0.155)
-**2025 Planning Baseline:** The 2025 trend-based forecast provides a baseline of 843–847 admissions/month, while actual monthly demand may vary due to seasonal fluctuations.
+- **Seasonal Demand:** August 860.20 (highest)
+- **Demand Variability:** December 64.14 (highest), making demand less predictable and requiring more flexible planning
+- **Long-Term Trend:** The long-term admission trend shows a weak positive relationship with time (r = 0.155)
+- **2025 Planning Baseline:** The 2025 trend-based forecast provides a baseline of 843–847 admissions/month, while actual monthly demand may vary due to seasonal fluctuations
    
 ---
 
 ## **Business Impact**
 
-These insights are translated into operational recommendations for airline planning teams.
+These insights are translated into operational recommendations for hospital management.
 
-- Helps airlines **plan capacity** during peak travel seasons
-- Optimize **staffing, scheduling decisions and resource allocation**
-- Improves demand forecasting for **revenue planning**
-- Prepare for **seasonal fluctuations in advance**
-- Reduce risk of **over or under** capacity
+- Helps hospital **plan capacity** during peak patient demand
+- Helps optimize **staffing, scheduling decisions and resource allocation**
+- Helps prepare for **seasonal fluctuations or variability in advance**
+- Helps reduce risk of **overcapacity** and **undercapacity**
   
 ---
 
