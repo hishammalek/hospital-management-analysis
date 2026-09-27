@@ -118,17 +118,31 @@ These insights are translated into operational recommendations for hospital mana
 
 ## **Project Structure**
 
-data_raw/
-
-data_clean/
-
-notebooks/
-
-powerbi/
-
-assets/
-
-Organized project into modular folders for reproducibility and Power BI integration
+hospital_management_analysis/
+├── assets/
+│   ├── images/
+│   └── pdf/
+├── data/
+│   ├── clean/
+│   ├── processed/
+│   └── raw/
+├── powerbi/
+│   └── hospital_management_analysis.pbix
+├── scripts/
+│   ├── check_clean_csv.py
+│   └── extract_excel_to_csv.py
+├── sql/
+│   ├── 01_schema_design.sql
+│   ├── 02_create_tables.sql
+│   ├── 03_load_data.sql
+│   ├── 04_module_01_patient_flow.sql
+│   ├── 05_module_02_department_performance.sql
+│   ├── 06_module_03_hospital_stay.sql
+│   ├── 07_module_04_cost_insurance_payment.sql
+│   ├── 08_module_05_doctor_performance.sql
+│   ├── 09_module_06_trend_time.sql
+│   └── 10_executive_summary.sql
+└── README.md
 
 ---
 
