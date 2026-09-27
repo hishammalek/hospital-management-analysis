@@ -1,5 +1,5 @@
 # **Hospital Management Analysis**
-**Excel, SQL & Power BI | Demand, Operational, Workload, Financial and Trends Outlook Insights**
+**Excel, SQL & Power BI | Insights into Patient Demand, Operations, Workload, Financial Performance, Trends and Future Outlook**
 
 [![Excel](https://img.shields.io/badge/Excel-Cloud-217346?logo=microsoftexcel&logoColor=white)](https://www.microsoft.com/microsoft-365/excel)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-SQL-336791?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
@@ -8,23 +8,23 @@
 ---
 
 ## **Project Overview**
-This project analyzes **Hospital Management dataset (2020-2024)** to understand hospital demand, operational, workload, financial and trends outlook capacity planning and operations.
+This project analyzes **the Hospital Management dataset (2020-2024)** to identify and understand patient demand, operational performance, doctor workload, financial performance, trends and future outlook.
 
 Final insights are presented through a Power BI dashboard to support decision-making in capacity planning and operations.
 
 ---
 
 ## **Problem Statement**
-Hospital need accurate data analysis for hospital demand, operational, workload, financial and trends outlook to optimize capacity, staffing, scheduling and marketing
+The hospital needs accurate and actionable data analysis for patient demand, operational performance, doctor workload, financial performance, trends and future outlook to optimize capacity, staffing and scheduling.
 
-This project explores various analysis to provides better understand for this dataset of hospital management.
+This project explores various analyses to provide a better understanding of this dataset.
 
 ---
 
 ## **Dataset**
 - Source: [Hospital Management Dataset](https://www.kaggle.com/datasets/garimakochale/hospital-management-dataset)
 - Time period: 2020-2024
-- Key variables: Patients and Admissions
+- Key tables: Patients, Admissions, Doctors, Departments, Treatment, Billing and Calendar.
 
 ---
 
