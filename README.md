@@ -51,32 +51,58 @@ Power BI:
 ---
 
 ## **Methodology**
-- Data cleaning and preprocessing
-- Exploratory time series analysis
-- Feature engineering (trend & seasonality)
-- Built ARIMA as baseline to capture trend-only structure
-- Extended to SARIMA to incorporate seasonal patterns
-- Model evaluation using Root Mean Squared Error (RMSE) and Mean Absolute Error (MAE)
-- Forecast visualizations and comparison
+- Create roadmap, phase and plan
+- Understanding the dataset
+- Data cleaning and preparation using Excel
+- Schema design, create tables and load data
+- Module 1 - Patient Flow Analysis
+- Module 2 - Department Performance
+- Module 3 - Hospital Stay Analysis
+- Module 4 - Cost, Insurance & Payment Analysis
+- Module 5 - Doctor Performance & Workload
+- Module 6 - Trend & Time Analysis
+- Executive Summary
+- Power BI data modeling and mapping
+- DAX measures and KPIs
+- Dashboard development
+- Technical QA and validation
 
 ---
 
 ## **Key Insights**
 
-1. Passenger demand shows a **strong long-term upward trend**
-2. Clear **seasonal fluctuations** with peak travel mid-year and lowest on Nov - Feb
-3. SARIMA was selected as the **final model due to significantly lower error and its ability to capture seasonal demand patterns more accurately than ARIMA**
-4. Forecasts show **continued proportional growth** in air travel demand throughout the years
+### 1. Patient Demand & Utilization
+- **Patient Utilization:** 99.27% had at least one admission, averaging 5.00
+- **Repeat Utilization:** 96.61% repeat patients, 3.39% admitted once
+- **Monthly Demand:** August 860.20 (highest), March 857.60 and October 854.80
+- **Weekday Demand:** 71.63% weekdays
+- **Annual Demand:** 2024 10,242 (highest) and 2022 9,784 (lowest)
 
----
+### 2. Operational Capacity & Patient Flow
+- **Census:** 172 in Dec 2022 (lowest) → 238 in Oct 2023 (highest)
+- **Admissions/discharges:** largest gap was Jan 2020 at 185
+- **Length of Stay:** 7.46 days, with 8–14 days being the largest category at 24,860
+- **Net Flow:** January +162 (highest), May -61 (lowest)
+- **Room Type:** General 29,947 (59.89%), Private 14,918 (29.84%), ICU 5,135 (10.27%)
 
-## **Model Performance**
-- **ARIMA: (1,1,0)** baseline model with no seasonality and AIC score of 1401.85
-- **SARIMA: Final model (1,1,0)(1,1,0,12)** improved performance with seasonal component and AIC score of 1020.393
-- Evaluation metrics:
-  - **RMSE: 20.81 (3.35%)**
-  - **MAE: 15.99 (2.57%)** 
+### 3. Department & Doctor Workload
+- **Workload:** 250 average admissions/doctor; Robert Flores 300 admissions (highest) and 298 unique patients, the difference represents repeated admissions
+- **ICU & Department:** The doctor with the highest total admissions does not have the highest ICU admissions. Admission workload varies by department, Oncology 6,237 (highest)
+- **Billing:** Christopher Carroll's average bill at $42,143.63 (highest), meaning he has a higher average billing value per admission than the hospital average of $37,773.51
 
+### 4. Financial Performance & Risk
+- **Financial Scale:** Total billing $1.89bn from 50,000 bills. Annual billing was relatively stable, $368.98M in 2022 → $389.74M in 2024
+- **Cost Structure:** Treatment cost $1.53bn, 80.75% of total billing. Medicine cost $225.48M and Lab cost $138.02M
+- **Payment Risk:** $353.57M of $1.42bn total patient payable remains pending.
+- **Billing Differences:** General rooms $892.14M (highest), Private $612.79M and ICU $383.74M. Oncology $235.92M (highest) and Gastroenterology $83.56M (lowest). Treatment types ranged $375.33M for Emergency to $386.00M for Therapy
+- **Insurance Contribution:** Insurance coverage was $472.80M, 25.03% of total billing
+
+### 5. Trends & Outlook
+**Seasonal Demand:** August 860.20 (highest)
+**Demand Variability:** December 64.14 (highest), making demand less predictable and requiring more flexible planning
+**Long-Term Trend:** The long-term admission trend shows a weak positive relationship with time (r = 0.155)
+**2025 Planning Baseline:** The 2025 trend-based forecast provides a baseline of 843–847 admissions/month, while actual monthly demand may vary due to seasonal fluctuations.
+   
 ---
 
 ## **Business Impact**
